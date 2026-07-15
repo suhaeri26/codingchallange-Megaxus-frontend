@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -52,7 +52,7 @@ function Field({
   );
 }
 
-export default function AuthPage() {
+function AuthPageContent() {
   const [isRegister, setIsRegister] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -172,5 +172,21 @@ export default function AuthPage() {
         </CardContent>
       </Card>
     </main>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className='min-h-screen grid place-items-center p-4'>
+          <div className='w-full max-w-md rounded-2xl border bg-background p-8 text-center shadow-sm'>
+            <p className='text-sm text-muted-foreground'>Memuat halaman...</p>
+          </div>
+        </main>
+      }
+    >
+      <AuthPageContent />
+    </Suspense>
   );
 }
