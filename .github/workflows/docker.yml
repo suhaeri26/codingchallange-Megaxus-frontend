@@ -1,8 +1,9 @@
 name: Docker Build & Push GHCR
 
 on:
-  push:
+  pull_request:
     branches: [ "release" ]
+    types: [closed]
     tags: [ "v*" ]
 
 jobs:
