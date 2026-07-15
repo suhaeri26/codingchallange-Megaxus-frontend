@@ -26,7 +26,7 @@ export default function UsersPage() {
   const users = list<User>(query.data);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [adjustmentType, setAdjustmentType] = useState<'add' | 'subtract'>('add');
-  const form = useForm<Values>({ resolver: zodResolver(schema as z.ZodType<Values>), defaultValues: { amount: 1 } });
+  const form = useForm<Values>({ defaultValues: { amount: 1 } });
   const adjust = usePatchUsersUserIdCoins({ mutation: {
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ['/users'] });
