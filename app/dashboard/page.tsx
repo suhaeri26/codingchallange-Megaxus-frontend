@@ -127,7 +127,7 @@ function Dashboard() {
               <Sparkles className='size-5' />
             </span>
             <div>
-              <h1 className='font-bold'>Gacha Nexus</h1>
+              <h1 className='font-bold'>Gacha Megaxus</h1>
               <p className='text-xs text-muted-foreground'>
                 Halo, {user.name || 'Collector'}
               </p>

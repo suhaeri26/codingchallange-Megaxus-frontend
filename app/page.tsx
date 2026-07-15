@@ -1,8 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -55,6 +55,7 @@ function Field({
 export default function AuthPage() {
   const [isRegister, setIsRegister] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
@@ -83,6 +84,19 @@ export default function AuthPage() {
   });
   const form: any = isRegister ? registerForm : loginForm;
   const pending = login.isPending || register.isPending;
+
+  useEffect(() => {
+    const verified = searchParams.get('verified');
+    const message = searchParams.get('message');
+
+    if (verified === '1') {
+      toast.success('Email berhasil diverifikasi. Silakan login.');
+    }
+
+    if (verified === '0') {
+      toast.error(message || 'Verifikasi email gagal. Silakan coba lagi.');
+    }
+  }, [searchParams]);
 
   return (
     <main className='min-h-screen grid place-items-center p-4'>

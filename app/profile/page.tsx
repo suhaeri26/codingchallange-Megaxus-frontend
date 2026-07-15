@@ -18,6 +18,17 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useGetUsersMe, usePatchUsersMe } from '@/generated/service/user/user';
+import { useGetUsersMeCoinTransactions } from '@/generated/service/user/user';
+import { list } from '@/components/admin/shared';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 type User = {
   name?: string;
@@ -25,6 +36,14 @@ type User = {
   coins?: number;
   role?: string;
   roles?: string[];
+};
+type CoinTransaction = {
+  id?: number | string;
+  amount?: number;
+  type?: string;
+  description?: string | null;
+  createdAt?: string;
+  balance?: number;
 };
 const schema = z.object({ name: z.string().min(3, 'Nama minimal 3 karakter') });
 export default function ProfilePage() {
@@ -37,7 +56,11 @@ export default function ProfilePage() {
 function Profile() {
   const client = useQueryClient();
   const query = useGetUsersMe();
-  const user = ((query.data as any)?.data as unknown as User) || {};
+  const transactionsQuery = useGetUsersMeCoinTransactions();
+  const user =
+    ((query.data as { data?: User } | undefined)?.data as User | undefined) ||
+    {};
+  const transactions = list<CoinTransaction>(transactionsQuery.data);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: { name: '' },
@@ -59,7 +82,7 @@ function Profile() {
       <div className='mx-auto max-w-6xl'>
         <header className='mb-7 flex flex-wrap items-center justify-between gap-4'>
           <div>
-            <h1 className='text-xl font-bold'>Gacha Nexus</h1>
+            <h1 className='text-xl font-bold'>Gacha Megaxus</h1>
             <p className='text-sm text-muted-foreground'>Pengaturan akun</p>
           </div>
           <UserNav role={user.role} roles={user.roles} />
@@ -104,6 +127,62 @@ function Profile() {
             </CardContent>
           </Card>
         </div>
+        <Card className='mt-5'>
+          <CardHeader>
+            <CardTitle>Riwayat transaksi coins</CardTitle>
+            <CardDescription>
+              Semua perubahan saldo coin pada akunmu.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {transactionsQuery.isLoading ? (
+              <Skeleton className='h-36 w-full' />
+            ) : transactions.length ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Transaksi</TableHead>
+                    <TableHead>Perubahan</TableHead>
+                    <TableHead>Saldo</TableHead>
+                    <TableHead>Tanggal</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {transactions.map((transaction, index) => {
+                    const amount = transaction.amount ?? 0;
+                    return (
+                      <TableRow key={transaction.id ?? index}>
+                        <TableCell>
+                          <p className='font-medium'>
+                            {transaction.description || transaction.type || 'Transaksi coin'}
+                          </p>
+                          {transaction.description && transaction.type && (
+                            <p className='text-xs text-muted-foreground'>{transaction.type}</p>
+                          )}
+                        </TableCell>
+                        <TableCell
+                          className={amount < 0 ? 'text-destructive' : 'text-emerald-600'}
+                        >
+                          {amount > 0 ? '+' : ''}{amount}
+                        </TableCell>
+                        <TableCell>{transaction.balance ?? '—'}</TableCell>
+                        <TableCell>
+                          {transaction.createdAt
+                            ? new Date(transaction.createdAt).toLocaleString('id-ID')
+                            : '—'}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            ) : (
+              <p className='rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground'>
+                Belum ada transaksi coin.
+              </p>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </main>
   );

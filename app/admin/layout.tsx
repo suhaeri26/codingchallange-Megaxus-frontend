@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ArrowLeft, Boxes, Package } from 'lucide-react';
+import { ArrowLeft, Boxes, Package, Users } from 'lucide-react';
 import { AuthGuard } from '@/components/auth-guard';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 const links = [
   { href: '/admin/items', label: 'Master Items', icon: Package },
   { href: '/admin/events', label: 'Master Events', icon: Boxes },
+  { href: '/admin/users', label: 'Users', icon: Users },
 ];
 
 export default function AdminLayout({

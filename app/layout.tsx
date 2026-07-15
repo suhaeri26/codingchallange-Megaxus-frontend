@@ -3,7 +3,7 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'Gacha Nexus',
+  title: 'Gacha Megaxus',
   description: 'Your next rare draw awaits.',
 };
 
