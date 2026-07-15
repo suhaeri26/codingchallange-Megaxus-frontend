@@ -50,40 +50,20 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export type getEventsResponse200 = {
-  data: void
-  status: 200
-}
-
-export type getEventsResponseSuccess = (getEventsResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getEventsResponse = (getEventsResponseSuccess)
-
-export const getGetEventsUrl = () => {
-
-
-
-
-  return `/events`
-}
-
 /**
  * @summary List gacha events
  */
-export const getEvents = async ( options?: RequestInit): Promise<getEventsResponse> => {
+export const getEvents = (
 
-  return customInstance<getEventsResponse>(getGetEventsUrl(),
-  {
-    ...options,
-    method: 'GET'
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/events`, method: 'GET', signal
+    },
+      );
+    }
 
 
 
@@ -104,7 +84,7 @@ const {query: queryOptions} = options ?? {};
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvents>>> = ({ signal }) => getEvents({ signal });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvents>>> = ({ signal }) => getEvents(signal);
 
 
 
@@ -162,40 +142,22 @@ export function useGetEvents<TData = Awaited<ReturnType<typeof getEvents>>, TErr
 
 
 
-export type postEventsResponse201 = {
-  data: void
-  status: 201
-}
-
-export type postEventsResponseSuccess = (postEventsResponse201) & {
-  headers: Headers;
-};
-;
-
-export type postEventsResponse = (postEventsResponseSuccess)
-
-export const getPostEventsUrl = () => {
-
-
-
-
-  return `/events`
-}
-
 /**
  * @summary Create gacha event
  */
-export const postEvents = async (createGachaEventRequest?: CreateGachaEventRequest, options?: RequestInit): Promise<postEventsResponse> => {
+export const postEvents = (
+    createGachaEventRequest?: BodyType<CreateGachaEventRequest>,
+ signal?: AbortSignal
+) => {
 
-  return customInstance<postEventsResponse>(getPostEventsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createGachaEventRequest)
-  }
-);}
 
+      return customInstance<void>(
+      {url: `/events`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createGachaEventRequest, signal
+    },
+      );
+    }
 
 
 
@@ -244,40 +206,20 @@ export const usePostEvents = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getPostEventsMutationOptions(options), queryClient);
     }
-    export type getEventsIdResponse200 = {
-  data: void
-  status: 200
-}
-
-export type getEventsIdResponseSuccess = (getEventsIdResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getEventsIdResponse = (getEventsIdResponseSuccess)
-
-export const getGetEventsIdUrl = (id: number,) => {
-
-
-
-
-  return `/events/${id}`
-}
-
-/**
+    /**
  * @summary Get gacha event by id
  */
-export const getEventsId = async (id: number, options?: RequestInit): Promise<getEventsIdResponse> => {
-
-  return customInstance<getEventsIdResponse>(getGetEventsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getEventsId = (
+    id: number,
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/events/${id}`, method: 'GET', signal
+    },
+      );
+    }
 
 
 
@@ -298,7 +240,7 @@ const {query: queryOptions} = options ?? {};
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventsId>>> = ({ signal }) => getEventsId(id, { signal });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventsId>>> = ({ signal }) => getEventsId(id, signal);
 
 
 
@@ -356,41 +298,23 @@ export function useGetEventsId<TData = Awaited<ReturnType<typeof getEventsId>>, 
 
 
 
-export type patchEventsIdResponse200 = {
-  data: void
-  status: 200
-}
-
-export type patchEventsIdResponseSuccess = (patchEventsIdResponse200) & {
-  headers: Headers;
-};
-;
-
-export type patchEventsIdResponse = (patchEventsIdResponseSuccess)
-
-export const getPatchEventsIdUrl = (id: number,) => {
-
-
-
-
-  return `/events/${id}`
-}
-
 /**
  * @summary Update gacha event
  */
-export const patchEventsId = async (id: number,
-    updateGachaEventRequest?: UpdateGachaEventRequest, options?: RequestInit): Promise<patchEventsIdResponse> => {
+export const patchEventsId = (
+    id: number,
+    updateGachaEventRequest?: BodyType<UpdateGachaEventRequest>,
+ signal?: AbortSignal
+) => {
 
-  return customInstance<patchEventsIdResponse>(getPatchEventsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(updateGachaEventRequest)
-  }
-);}
 
+      return customInstance<void>(
+      {url: `/events/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateGachaEventRequest, signal
+    },
+      );
+    }
 
 
 
@@ -439,40 +363,20 @@ export const usePatchEventsId = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getPatchEventsIdMutationOptions(options), queryClient);
     }
-    export type deleteEventsIdResponse200 = {
-  data: void
-  status: 200
-}
-
-export type deleteEventsIdResponseSuccess = (deleteEventsIdResponse200) & {
-  headers: Headers;
-};
-;
-
-export type deleteEventsIdResponse = (deleteEventsIdResponseSuccess)
-
-export const getDeleteEventsIdUrl = (id: number,) => {
-
-
-
-
-  return `/events/${id}`
-}
-
-/**
+    /**
  * @summary Delete gacha event
  */
-export const deleteEventsId = async (id: number, options?: RequestInit): Promise<deleteEventsIdResponse> => {
-
-  return customInstance<deleteEventsIdResponse>(getDeleteEventsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
+export const deleteEventsId = (
+    id: number,
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/events/${id}`, method: 'DELETE', signal
+    },
+      );
+    }
 
 
 

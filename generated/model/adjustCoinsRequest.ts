@@ -6,9 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface CreateGachaEventItemRequest {
-  /** @exclusiveMinimum 0 */
-  itemId: number;
-  /** @exclusiveMinimum 0 */
-  dropRate: number;
+export interface AdjustCoinsRequest {
+  /** @nullable */
+  amount: number | null;
 }

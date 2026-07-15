@@ -50,40 +50,20 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export type getEventsEventIdItemsResponse200 = {
-  data: void
-  status: 200
-}
-
-export type getEventsEventIdItemsResponseSuccess = (getEventsEventIdItemsResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getEventsEventIdItemsResponse = (getEventsEventIdItemsResponseSuccess)
-
-export const getGetEventsEventIdItemsUrl = (eventId: number,) => {
-
-
-
-
-  return `/events/${eventId}/items`
-}
-
 /**
  * @summary List items for a gacha event
  */
-export const getEventsEventIdItems = async (eventId: number, options?: RequestInit): Promise<getEventsEventIdItemsResponse> => {
-
-  return customInstance<getEventsEventIdItemsResponse>(getGetEventsEventIdItemsUrl(eventId),
-  {
-    ...options,
-    method: 'GET'
+export const getEventsEventIdItems = (
+    eventId: number,
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/events/${eventId}/items`, method: 'GET', signal
+    },
+      );
+    }
 
 
 
@@ -104,7 +84,7 @@ const {query: queryOptions} = options ?? {};
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventsEventIdItems>>> = ({ signal }) => getEventsEventIdItems(eventId, { signal });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventsEventIdItems>>> = ({ signal }) => getEventsEventIdItems(eventId, signal);
 
 
 
@@ -162,41 +142,23 @@ export function useGetEventsEventIdItems<TData = Awaited<ReturnType<typeof getEv
 
 
 
-export type postEventsEventIdItemsResponse201 = {
-  data: void
-  status: 201
-}
-
-export type postEventsEventIdItemsResponseSuccess = (postEventsEventIdItemsResponse201) & {
-  headers: Headers;
-};
-;
-
-export type postEventsEventIdItemsResponse = (postEventsEventIdItemsResponseSuccess)
-
-export const getPostEventsEventIdItemsUrl = (eventId: number,) => {
-
-
-
-
-  return `/events/${eventId}/items`
-}
-
 /**
  * @summary Add item to gacha event
  */
-export const postEventsEventIdItems = async (eventId: number,
-    createGachaEventItemRequest?: CreateGachaEventItemRequest, options?: RequestInit): Promise<postEventsEventIdItemsResponse> => {
+export const postEventsEventIdItems = (
+    eventId: number,
+    createGachaEventItemRequest?: BodyType<CreateGachaEventItemRequest>,
+ signal?: AbortSignal
+) => {
 
-  return customInstance<postEventsEventIdItemsResponse>(getPostEventsEventIdItemsUrl(eventId),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createGachaEventItemRequest)
-  }
-);}
 
+      return customInstance<void>(
+      {url: `/events/${eventId}/items`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createGachaEventItemRequest, signal
+    },
+      );
+    }
 
 
 
@@ -245,50 +207,32 @@ export const usePostEventsEventIdItems = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getPostEventsEventIdItemsMutationOptions(options), queryClient);
     }
-    export type patchItemsIdResponse200 = {
-  data: void
-  status: 200
-}
-
-export type patchItemsIdResponseSuccess = (patchItemsIdResponse200) & {
-  headers: Headers;
-};
-;
-
-export type patchItemsIdResponse = (patchItemsIdResponseSuccess)
-
-export const getPatchItemsIdUrl = (id: number,) => {
-
-
-
-
-  return `/items/${id}`
-}
-
-/**
+    /**
  * @summary Update gacha event item
  */
-export const patchItemsId = async (id: number,
-    updateGachaEventItemRequest?: UpdateGachaEventItemRequest, options?: RequestInit): Promise<patchItemsIdResponse> => {
-
-  return customInstance<patchItemsIdResponse>(getPatchItemsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(updateGachaEventItemRequest)
-  }
-);}
+export const patchEventsItemsId = (
+    id: number,
+    updateGachaEventItemRequest?: BodyType<UpdateGachaEventItemRequest>,
+ signal?: AbortSignal
+) => {
 
 
+      return customInstance<void>(
+      {url: `/events/items/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateGachaEventItemRequest, signal
+    },
+      );
+    }
 
 
 
-export const getPatchItemsIdMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchItemsId>>, TError,{id: number;data?: BodyType<UpdateGachaEventItemRequest>}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof patchItemsId>>, TError,{id: number;data?: BodyType<UpdateGachaEventItemRequest>}, TContext> => {
 
-const mutationKey = ['patchItemsId'];
+export const getPatchEventsItemsIdMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchEventsItemsId>>, TError,{id: number;data?: BodyType<UpdateGachaEventItemRequest>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof patchEventsItemsId>>, TError,{id: number;data?: BodyType<UpdateGachaEventItemRequest>}, TContext> => {
+
+const mutationKey = ['patchEventsItemsId'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -298,10 +242,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchItemsId>>, {id: number;data?: BodyType<UpdateGachaEventItemRequest>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchEventsItemsId>>, {id: number;data?: BodyType<UpdateGachaEventItemRequest>}> = (props) => {
           const {id,data} = props ?? {};
 
-          return  patchItemsId(id,data,)
+          return  patchEventsItemsId(id,data,)
         }
 
 
@@ -311,66 +255,46 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PatchItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchItemsId>>>
-    export type PatchItemsIdMutationBody = BodyType<UpdateGachaEventItemRequest> | undefined
-    export type PatchItemsIdMutationError = ErrorType<unknown>
+    export type PatchEventsItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchEventsItemsId>>>
+    export type PatchEventsItemsIdMutationBody = BodyType<UpdateGachaEventItemRequest> | undefined
+    export type PatchEventsItemsIdMutationError = ErrorType<unknown>
 
     /**
  * @summary Update gacha event item
  */
-export const usePatchItemsId = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchItemsId>>, TError,{id: number;data?: BodyType<UpdateGachaEventItemRequest>}, TContext>, }
+export const usePatchEventsItemsId = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchEventsItemsId>>, TError,{id: number;data?: BodyType<UpdateGachaEventItemRequest>}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof patchItemsId>>,
+        Awaited<ReturnType<typeof patchEventsItemsId>>,
         TError,
         {id: number;data?: BodyType<UpdateGachaEventItemRequest>},
         TContext
       > => {
-      return useMutation(getPatchItemsIdMutationOptions(options), queryClient);
+      return useMutation(getPatchEventsItemsIdMutationOptions(options), queryClient);
     }
-    export type deleteItemsIdResponse200 = {
-  data: void
-  status: 200
-}
-
-export type deleteItemsIdResponseSuccess = (deleteItemsIdResponse200) & {
-  headers: Headers;
-};
-;
-
-export type deleteItemsIdResponse = (deleteItemsIdResponseSuccess)
-
-export const getDeleteItemsIdUrl = (id: number,) => {
-
-
-
-
-  return `/items/${id}`
-}
-
-/**
+    /**
  * @summary Delete gacha event item
  */
-export const deleteItemsId = async (id: number, options?: RequestInit): Promise<deleteItemsIdResponse> => {
-
-  return customInstance<deleteItemsIdResponse>(getDeleteItemsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
+export const deleteEventsItemsId = (
+    id: number,
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
+      return customInstance<void>(
+      {url: `/events/items/${id}`, method: 'DELETE', signal
+    },
+      );
+    }
 
 
 
 
+export const getDeleteEventsItemsIdMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEventsItemsId>>, TError,{id: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deleteEventsItemsId>>, TError,{id: number}, TContext> => {
 
-export const getDeleteItemsIdMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteItemsId>>, TError,{id: number}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof deleteItemsId>>, TError,{id: number}, TContext> => {
-
-const mutationKey = ['deleteItemsId'];
+const mutationKey = ['deleteEventsItemsId'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -380,10 +304,10 @@ const {mutation: mutationOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteItemsId>>, {id: number}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteEventsItemsId>>, {id: number}> = (props) => {
           const {id} = props ?? {};
 
-          return  deleteItemsId(id,)
+          return  deleteEventsItemsId(id,)
         }
 
 
@@ -393,20 +317,20 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteItemsId>>>
+    export type DeleteEventsItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteEventsItemsId>>>
 
-    export type DeleteItemsIdMutationError = ErrorType<unknown>
+    export type DeleteEventsItemsIdMutationError = ErrorType<unknown>
 
     /**
  * @summary Delete gacha event item
  */
-export const useDeleteItemsId = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteItemsId>>, TError,{id: number}, TContext>, }
+export const useDeleteEventsItemsId = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEventsItemsId>>, TError,{id: number}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deleteItemsId>>,
+        Awaited<ReturnType<typeof deleteEventsItemsId>>,
         TError,
         {id: number},
         TContext
       > => {
-      return useMutation(getDeleteItemsIdMutationOptions(options), queryClient);
+      return useMutation(getDeleteEventsItemsIdMutationOptions(options), queryClient);
     }

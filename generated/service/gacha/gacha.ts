@@ -49,40 +49,22 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export type postGachaDrawResponse200 = {
-  data: void
-  status: 200
-}
-
-export type postGachaDrawResponseSuccess = (postGachaDrawResponse200) & {
-  headers: Headers;
-};
-;
-
-export type postGachaDrawResponse = (postGachaDrawResponseSuccess)
-
-export const getPostGachaDrawUrl = () => {
-
-
-
-
-  return `/gacha/draw`
-}
-
 /**
  * @summary Draw a gacha item
  */
-export const postGachaDraw = async (drawGachaRequest?: DrawGachaRequest, options?: RequestInit): Promise<postGachaDrawResponse> => {
+export const postGachaDraw = (
+    drawGachaRequest?: BodyType<DrawGachaRequest>,
+ signal?: AbortSignal
+) => {
 
-  return customInstance<postGachaDrawResponse>(getPostGachaDrawUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(drawGachaRequest)
-  }
-);}
 
+      return customInstance<void>(
+      {url: `/gacha/draw`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: drawGachaRequest, signal
+    },
+      );
+    }
 
 
 
@@ -131,40 +113,20 @@ export const usePostGachaDraw = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getPostGachaDrawMutationOptions(options), queryClient);
     }
-    export type getGachaHistoryResponse200 = {
-  data: void
-  status: 200
-}
-
-export type getGachaHistoryResponseSuccess = (getGachaHistoryResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getGachaHistoryResponse = (getGachaHistoryResponseSuccess)
-
-export const getGetGachaHistoryUrl = () => {
-
-
-
-
-  return `/gacha/history`
-}
-
-/**
+    /**
  * @summary Get gacha history
  */
-export const getGachaHistory = async ( options?: RequestInit): Promise<getGachaHistoryResponse> => {
+export const getGachaHistory = (
 
-  return customInstance<getGachaHistoryResponse>(getGetGachaHistoryUrl(),
-  {
-    ...options,
-    method: 'GET'
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/gacha/history`, method: 'GET', signal
+    },
+      );
+    }
 
 
 
@@ -185,7 +147,7 @@ const {query: queryOptions} = options ?? {};
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGachaHistory>>> = ({ signal }) => getGachaHistory({ signal });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGachaHistory>>> = ({ signal }) => getGachaHistory(signal);
 
 
 

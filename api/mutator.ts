@@ -1,10 +1,6 @@
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from "axios";
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import { apiClient } from "./client";
+import { apiClient } from './client';
 
 export const customInstance = async <T>(
   config: AxiosRequestConfig,

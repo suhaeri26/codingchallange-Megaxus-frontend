@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -123,6 +123,17 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(
+        circle at 15% 0%,
+        rgb(99 102 241 / 0.16),
+        transparent 32rem
+      ),
+      radial-gradient(
+        circle at 95% 15%,
+        rgb(20 184 166 / 0.12),
+        transparent 28rem
+      );
   }
   html {
     @apply font-sans;

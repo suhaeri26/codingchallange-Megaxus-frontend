@@ -25,6 +25,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AdjustCoinsRequest,
   UpdateProfileRequest
 } from '../../model';
 
@@ -49,40 +50,112 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export type getUsersMeResponse200 = {
-  data: void
-  status: 200
+/**
+ * @summary Get all users
+ */
+export const getUsers = (
+
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<void>(
+      {url: `/users`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
+
+export const getGetUsersQueryKey = () => {
+    return [
+    `/users`
+    ] as const;
+    }
+
+
+export const getGetUsersQueryOptions = <TData = Awaited<ReturnType<typeof getUsers>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUsersQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsers>>> = ({ signal }) => getUsers(signal);
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type getUsersMeResponseSuccess = (getUsersMeResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getUsersMeResponse = (getUsersMeResponseSuccess)
-
-export const getGetUsersMeUrl = () => {
+export type GetUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>
+export type GetUsersQueryError = ErrorType<unknown>
 
 
+export function useGetUsers<TData = Awaited<ReturnType<typeof getUsers>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUsers>>,
+          TError,
+          Awaited<ReturnType<typeof getUsers>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUsers<TData = Awaited<ReturnType<typeof getUsers>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUsers>>,
+          TError,
+          Awaited<ReturnType<typeof getUsers>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUsers<TData = Awaited<ReturnType<typeof getUsers>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all users
+ */
 
+export function useGetUsers<TData = Awaited<ReturnType<typeof getUsers>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  return `/users/me`
+  const queryOptions = getGetUsersQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
 
 /**
  * @summary Get current user profile
  */
-export const getUsersMe = async ( options?: RequestInit): Promise<getUsersMeResponse> => {
+export const getUsersMe = (
 
-  return customInstance<getUsersMeResponse>(getGetUsersMeUrl(),
-  {
-    ...options,
-    method: 'GET'
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/users/me`, method: 'GET', signal
+    },
+      );
+    }
 
 
 
@@ -103,7 +176,7 @@ const {query: queryOptions} = options ?? {};
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsersMe>>> = ({ signal }) => getUsersMe({ signal });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsersMe>>> = ({ signal }) => getUsersMe(signal);
 
 
 
@@ -161,40 +234,22 @@ export function useGetUsersMe<TData = Awaited<ReturnType<typeof getUsersMe>>, TE
 
 
 
-export type patchUsersMeResponse200 = {
-  data: void
-  status: 200
-}
-
-export type patchUsersMeResponseSuccess = (patchUsersMeResponse200) & {
-  headers: Headers;
-};
-;
-
-export type patchUsersMeResponse = (patchUsersMeResponseSuccess)
-
-export const getPatchUsersMeUrl = () => {
-
-
-
-
-  return `/users/me`
-}
-
 /**
  * @summary Update current user profile
  */
-export const patchUsersMe = async (updateProfileRequest?: UpdateProfileRequest, options?: RequestInit): Promise<patchUsersMeResponse> => {
+export const patchUsersMe = (
+    updateProfileRequest?: BodyType<UpdateProfileRequest>,
+ signal?: AbortSignal
+) => {
 
-  return customInstance<patchUsersMeResponse>(getPatchUsersMeUrl(),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(updateProfileRequest)
-  }
-);}
 
+      return customInstance<void>(
+      {url: `/users/me`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateProfileRequest, signal
+    },
+      );
+    }
 
 
 
@@ -242,4 +297,161 @@ export const usePatchUsersMe = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getPatchUsersMeMutationOptions(options), queryClient);
+    }
+    /**
+ * @summary Get current user coin transaction history
+ */
+export const getUsersMeCoinTransactions = (
+
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<void>(
+      {url: `/users/me/coin-transactions`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
+
+export const getGetUsersMeCoinTransactionsQueryKey = () => {
+    return [
+    `/users/me/coin-transactions`
+    ] as const;
+    }
+
+
+export const getGetUsersMeCoinTransactionsQueryOptions = <TData = Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUsersMeCoinTransactionsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsersMeCoinTransactions>>> = ({ signal }) => getUsersMeCoinTransactions(signal);
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetUsersMeCoinTransactionsQueryResult = NonNullable<Awaited<ReturnType<typeof getUsersMeCoinTransactions>>>
+export type GetUsersMeCoinTransactionsQueryError = ErrorType<unknown>
+
+
+export function useGetUsersMeCoinTransactions<TData = Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUsersMeCoinTransactions>>,
+          TError,
+          Awaited<ReturnType<typeof getUsersMeCoinTransactions>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUsersMeCoinTransactions<TData = Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUsersMeCoinTransactions>>,
+          TError,
+          Awaited<ReturnType<typeof getUsersMeCoinTransactions>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUsersMeCoinTransactions<TData = Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get current user coin transaction history
+ */
+
+export function useGetUsersMeCoinTransactions<TData = Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsersMeCoinTransactions>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetUsersMeCoinTransactionsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+/**
+ * @summary Admin adjust user coins
+ */
+export const patchUsersUserIdCoins = (
+    userId: number,
+    adjustCoinsRequest?: BodyType<AdjustCoinsRequest>,
+ signal?: AbortSignal
+) => {
+
+
+      return customInstance<void>(
+      {url: `/users/${userId}/coins`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: adjustCoinsRequest, signal
+    },
+      );
+    }
+
+
+
+
+export const getPatchUsersUserIdCoinsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchUsersUserIdCoins>>, TError,{userId: number;data?: BodyType<AdjustCoinsRequest>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof patchUsersUserIdCoins>>, TError,{userId: number;data?: BodyType<AdjustCoinsRequest>}, TContext> => {
+
+const mutationKey = ['patchUsersUserIdCoins'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchUsersUserIdCoins>>, {userId: number;data?: BodyType<AdjustCoinsRequest>}> = (props) => {
+          const {userId,data} = props ?? {};
+
+          return  patchUsersUserIdCoins(userId,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchUsersUserIdCoinsMutationResult = NonNullable<Awaited<ReturnType<typeof patchUsersUserIdCoins>>>
+    export type PatchUsersUserIdCoinsMutationBody = BodyType<AdjustCoinsRequest> | undefined
+    export type PatchUsersUserIdCoinsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Admin adjust user coins
+ */
+export const usePatchUsersUserIdCoins = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchUsersUserIdCoins>>, TError,{userId: number;data?: BodyType<AdjustCoinsRequest>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchUsersUserIdCoins>>,
+        TError,
+        {userId: number;data?: BodyType<AdjustCoinsRequest>},
+        TContext
+      > => {
+      return useMutation(getPatchUsersUserIdCoinsMutationOptions(options), queryClient);
     }

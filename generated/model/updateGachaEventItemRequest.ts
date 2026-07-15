@@ -11,9 +11,4 @@ export interface UpdateGachaEventItemRequest {
   itemId?: number;
   /** @exclusiveMinimum 0 */
   dropRate?: number;
-  /**
-     * @minimum 0
-     * @nullable
-     */
-  stock?: number | null;
 }

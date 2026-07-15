@@ -1,65 +1,162 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  usePostAuthLogin,
+  usePostAuthRegister,
+} from '@/generated/service/authentication/authentication';
+import { Sparkles } from 'lucide-react';
+
+const loginSchema = z.object({
+  email: z.string().email('Masukkan email yang valid'),
+  password: z.string().min(8, 'Minimal 8 karakter'),
+});
+const registerSchema = loginSchema.extend({
+  name: z.string().min(3, 'Minimal 3 karakter'),
+});
+const errorMessage = (e: unknown) =>
+  (e as { response?: { data?: { message?: string } }; message?: string })
+    ?.response?.data?.message ||
+  (e as Error).message ||
+  'Terjadi kesalahan. Coba lagi.';
+
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <label className='grid gap-1.5 text-sm font-medium'>
+      {label}
+      {children}
+      {error && <span className='text-xs text-destructive'>{error}</span>}
+    </label>
+  );
+}
+
+export default function AuthPage() {
+  const [isRegister, setIsRegister] = useState(false);
+  const router = useRouter();
+  const loginForm = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
+  const registerForm = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { name: '', email: '', password: '' },
+  });
+  const login = usePostAuthLogin({
+    mutation: {
+      onSuccess: () => {
+        toast.success('Selamat datang kembali!');
+        router.replace('/dashboard');
+      },
+      onError: (e) => toast.error(errorMessage(e)),
+    },
+  });
+  const register = usePostAuthRegister({
+    mutation: {
+      onSuccess: () => {
+        toast.success('Akun berhasil dibuat. Silakan masuk.');
+        setIsRegister(false);
+      },
+      onError: (e) => toast.error(errorMessage(e)),
+    },
+  });
+  const form: any = isRegister ? registerForm : loginForm;
+  const pending = login.isPending || register.isPending;
+
+  return (
+    <main className='min-h-screen grid place-items-center p-4'>
+      <Card className='w-full max-w-md shadow-2xl shadow-indigo-500/15'>
+        <CardHeader>
+          <div className='mb-3 grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-700 text-white'>
+            <Sparkles />
+          </div>
+          <CardTitle className='text-2xl'>
+            {isRegister ? 'Buat akun baru' : 'Selamat datang'}
+          </CardTitle>
+          <CardDescription>
+            {isRegister
+              ? 'Daftar untuk mulai mengumpulkan item langka.'
+              : 'Masuk untuk melanjutkan koleksi gacha-mu.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form
+            className='grid gap-4'
+            onSubmit={form.handleSubmit((values: any) =>
+              isRegister
+                ? register.mutate({
+                    data: values as z.infer<typeof registerSchema>,
+                  })
+                : login.mutate({ data: values }),
+            )}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            {isRegister && (
+              <Field
+                label='Nama'
+                error={registerForm.formState.errors.name?.message}
+              >
+                <Input
+                  placeholder='Nama kamu'
+                  {...registerForm.register('name')}
+                />
+              </Field>
+            )}
+            <Field label='Email' error={form.formState.errors.email?.message}>
+              <Input
+                type='email'
+                placeholder='you@example.com'
+                {...form.register('email')}
+              />
+            </Field>
+            <Field
+              label='Password'
+              error={form.formState.errors.password?.message}
+            >
+              <Input
+                type='password'
+                placeholder='Minimal 8 karakter'
+                {...form.register('password')}
+              />
+            </Field>
+            <Button className='mt-1 h-10' type='submit' disabled={pending}>
+              {pending
+                ? 'Memproses...'
+                : isRegister
+                  ? 'Daftar sekarang'
+                  : 'Masuk'}
+            </Button>
+          </form>
+          <button
+            className='mt-5 w-full text-sm font-medium text-indigo-600 hover:underline'
+            onClick={() => setIsRegister((value) => !value)}
           >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            {isRegister
+              ? 'Sudah punya akun? Masuk'
+              : 'Belum punya akun? Daftar'}
+          </button>
+        </CardContent>
+      </Card>
+    </main>
   );
 }

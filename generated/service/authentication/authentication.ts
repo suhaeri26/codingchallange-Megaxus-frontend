@@ -52,40 +52,22 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export type postAuthRegisterResponse201 = {
-  data: void
-  status: 201
-}
-
-export type postAuthRegisterResponseSuccess = (postAuthRegisterResponse201) & {
-  headers: Headers;
-};
-;
-
-export type postAuthRegisterResponse = (postAuthRegisterResponseSuccess)
-
-export const getPostAuthRegisterUrl = () => {
-
-
-
-
-  return `/auth/register`
-}
-
 /**
  * @summary Register new user
  */
-export const postAuthRegister = async (registerRequest?: RegisterRequest, options?: RequestInit): Promise<postAuthRegisterResponse> => {
+export const postAuthRegister = (
+    registerRequest?: BodyType<RegisterRequest>,
+ signal?: AbortSignal
+) => {
 
-  return customInstance<postAuthRegisterResponse>(getPostAuthRegisterUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(registerRequest)
-  }
-);}
 
+      return customInstance<void>(
+      {url: `/auth/register`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: registerRequest, signal
+    },
+      );
+    }
 
 
 
@@ -134,40 +116,22 @@ export const usePostAuthRegister = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getPostAuthRegisterMutationOptions(options), queryClient);
     }
-    export type postAuthLoginResponse200 = {
-  data: void
-  status: 200
-}
-
-export type postAuthLoginResponseSuccess = (postAuthLoginResponse200) & {
-  headers: Headers;
-};
-;
-
-export type postAuthLoginResponse = (postAuthLoginResponseSuccess)
-
-export const getPostAuthLoginUrl = () => {
-
-
-
-
-  return `/auth/login`
-}
-
-/**
+    /**
  * @summary Login
  */
-export const postAuthLogin = async (loginRequest?: LoginRequest, options?: RequestInit): Promise<postAuthLoginResponse> => {
+export const postAuthLogin = (
+    loginRequest?: BodyType<LoginRequest>,
+ signal?: AbortSignal
+) => {
 
-  return customInstance<postAuthLoginResponse>(getPostAuthLoginUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(loginRequest)
-  }
-);}
 
+      return customInstance<void>(
+      {url: `/auth/login`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: loginRequest, signal
+    },
+      );
+    }
 
 
 
@@ -216,40 +180,20 @@ export const usePostAuthLogin = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getPostAuthLoginMutationOptions(options), queryClient);
     }
-    export type postAuthLogoutResponse200 = {
-  data: void
-  status: 200
-}
-
-export type postAuthLogoutResponseSuccess = (postAuthLogoutResponse200) & {
-  headers: Headers;
-};
-;
-
-export type postAuthLogoutResponse = (postAuthLogoutResponseSuccess)
-
-export const getPostAuthLogoutUrl = () => {
-
-
-
-
-  return `/auth/logout`
-}
-
-/**
+    /**
  * @summary Logout
  */
-export const postAuthLogout = async ( options?: RequestInit): Promise<postAuthLogoutResponse> => {
+export const postAuthLogout = (
 
-  return customInstance<postAuthLogoutResponse>(getPostAuthLogoutUrl(),
-  {
-    ...options,
-    method: 'POST'
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/auth/logout`, method: 'POST', signal
+    },
+      );
+    }
 
 
 
@@ -298,40 +242,20 @@ export const usePostAuthLogout = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getPostAuthLogoutMutationOptions(options), queryClient);
     }
-    export type getAuthMeResponse200 = {
-  data: void
-  status: 200
-}
-
-export type getAuthMeResponseSuccess = (getAuthMeResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getAuthMeResponse = (getAuthMeResponseSuccess)
-
-export const getGetAuthMeUrl = () => {
-
-
-
-
-  return `/auth/me`
-}
-
-/**
+    /**
  * @summary Get current user
  */
-export const getAuthMe = async ( options?: RequestInit): Promise<getAuthMeResponse> => {
+export const getAuthMe = (
 
-  return customInstance<getAuthMeResponse>(getGetAuthMeUrl(),
-  {
-    ...options,
-    method: 'GET'
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/auth/me`, method: 'GET', signal
+    },
+      );
+    }
 
 
 
@@ -352,7 +276,7 @@ const {query: queryOptions} = options ?? {};
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthMe>>> = ({ signal }) => getAuthMe({ signal });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthMe>>> = ({ signal }) => getAuthMe(signal);
 
 
 
@@ -410,47 +334,21 @@ export function useGetAuthMe<TData = Awaited<ReturnType<typeof getAuthMe>>, TErr
 
 
 
-export type getAuthVerifyEmailResponse200 = {
-  data: void
-  status: 200
-}
-
-export type getAuthVerifyEmailResponseSuccess = (getAuthVerifyEmailResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getAuthVerifyEmailResponse = (getAuthVerifyEmailResponseSuccess)
-
-export const getGetAuthVerifyEmailUrl = (params: GetAuthVerifyEmailParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/auth/verify-email?${stringifiedParams}` : `/auth/verify-email`
-}
-
 /**
  * @summary Verify email
  */
-export const getAuthVerifyEmail = async (params: GetAuthVerifyEmailParams, options?: RequestInit): Promise<getAuthVerifyEmailResponse> => {
-
-  return customInstance<getAuthVerifyEmailResponse>(getGetAuthVerifyEmailUrl(params),
-  {
-    ...options,
-    method: 'GET'
+export const getAuthVerifyEmail = (
+    params: GetAuthVerifyEmailParams,
+ signal?: AbortSignal
+) => {
 
 
-  }
-);}
-
+      return customInstance<void>(
+      {url: `/auth/verify-email`, method: 'GET',
+        params, signal
+    },
+      );
+    }
 
 
 
@@ -471,7 +369,7 @@ const {query: queryOptions} = options ?? {};
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthVerifyEmail>>> = ({ signal }) => getAuthVerifyEmail(params, { signal });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthVerifyEmail>>> = ({ signal }) => getAuthVerifyEmail(params, signal);
 
 
 
@@ -529,40 +427,22 @@ export function useGetAuthVerifyEmail<TData = Awaited<ReturnType<typeof getAuthV
 
 
 
-export type postAuthResendVerificationResponse200 = {
-  data: void
-  status: 200
-}
-
-export type postAuthResendVerificationResponseSuccess = (postAuthResendVerificationResponse200) & {
-  headers: Headers;
-};
-;
-
-export type postAuthResendVerificationResponse = (postAuthResendVerificationResponseSuccess)
-
-export const getPostAuthResendVerificationUrl = () => {
-
-
-
-
-  return `/auth/resend-verification`
-}
-
 /**
  * @summary Resend email verification
  */
-export const postAuthResendVerification = async (resendVerificationRequest?: ResendVerificationRequest, options?: RequestInit): Promise<postAuthResendVerificationResponse> => {
+export const postAuthResendVerification = (
+    resendVerificationRequest?: BodyType<ResendVerificationRequest>,
+ signal?: AbortSignal
+) => {
 
-  return customInstance<postAuthResendVerificationResponse>(getPostAuthResendVerificationUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(resendVerificationRequest)
-  }
-);}
 
+      return customInstance<void>(
+      {url: `/auth/resend-verification`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: resendVerificationRequest, signal
+    },
+      );
+    }
 
 
 

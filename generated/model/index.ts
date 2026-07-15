@@ -6,8 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from './adjustCoinsRequest';
 export * from './createGachaEventItemRequest';
 export * from './createGachaEventRequest';
+export * from './createItemRequest';
 export * from './drawGachaRequest';
 export * from './getAuthVerifyEmailParams';
 export * from './loginRequest';
@@ -15,4 +17,5 @@ export * from './registerRequest';
 export * from './resendVerificationRequest';
 export * from './updateGachaEventItemRequest';
 export * from './updateGachaEventRequest';
+export * from './updateItemRequest';
 export * from './updateProfileRequest';
